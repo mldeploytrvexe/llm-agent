@@ -13,5 +13,5 @@ def document_name_node(state: State):
              без служебных сообщений и вводных слов \n\n Сообщение пользователя: {message} \n\nНазвание документа:"
     )
     human_message = HumanMessage(content=prompt.format(message=state["message"]))
-    document_name = llm.invoke([human_message]).content.strip()
+    document_name = llm.invoke([human_message]).content.strip() #type:ignore
     return {"document_name": document_name}

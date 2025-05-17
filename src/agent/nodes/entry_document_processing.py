@@ -13,10 +13,11 @@ def document_name_node(state: State):
     prompt = PromptTemplate(
         input_variables=["message"],
         template="По сообщениям пользователя нужно понять, как назвать нужный пользователю документ. Выведи только название документа \
-             без служебных сообщений и вводных слов \n\n Сообщение пользователя: {message} \n\nНазвание документа:"
+             без служебных сообщений и вводных слов \n\n Сообщение пользователя: {message} \n\n Если у тебя достаточно информации, чтобы \
+                сформулировать название для документа, верни только название документа без каких-либо служебных фраз, иначе верни None:"
     )
-    human_message = HumanMessage(content=prompt.format(message=state["message"]))
-    document_name = llm.invoke([human_message]).content.strip() #type:ignore
+    human_message = HumanMessage(content=prompt.format(message=state.message))
+    document_name = llm.invoke([human_message]).content.strip()
     return {"document_name": document_name}
 
 
@@ -30,8 +31,8 @@ def document_legal_node(state: State):
                 | Если результат проверки документа на законность True, верни результат в таком виде: True|None \
                      Если результат проверки документа на законность False, верни результат в таком виде: False|причина незаконности документа"
     )
-    human_message = HumanMessage(content=prompt.format(document_name=state["document_name"],
-                                                       messages=state["message"]))
+    human_message = HumanMessage(content=prompt.format(document_name=state.document_name,
+                                                       messages=state.message))
     
     legality = llm.invoke([human_message]).content.strip()
 
@@ -48,7 +49,7 @@ def document_structure_node(state: State):
         template="По названию документа нужно понять, какая у документа должна быть структура. Выведи только структуру документа \
              без служебных сообщений и вводных слов \n\nНазвание документа:{document_name} \n\n Структура документа: "
     )
-    human_message = HumanMessage(content=prompt.format(document_name=state["document_name"]))
+    human_message = HumanMessage(content=prompt.format(document_name=state.document_name))
     
     document_structure = llm.invoke([human_message]).content.strip() #type:ignore
     return {"document_structure": document_structure}

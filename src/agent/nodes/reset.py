@@ -1,14 +1,12 @@
 from src.agent.schemas import State
-from src.agent.llm import llm
-from langchain.prompts import PromptTemplate
-from langchain.schema import HumanMessage
 
 
 
-
-def reset_node(state: State):
-    state['message'] = None #type:ignore
+def reset_node(state: State) -> State:
+    state['message'] = None 
     state['document_type'] = None
-    state['is_legal'] = None
+    state['legality'] = None
+    state['document_structure'] = None
+    state['markdown_document'] = None
 
     return state

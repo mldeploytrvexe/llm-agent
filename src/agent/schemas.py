@@ -1,15 +1,21 @@
-from typing_extensions import TypedDict
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 
-class Legality(BaseModel):
+class CoreModel(BaseModel):
+    model_config = ConfigDict(
+        from_attributes=True,
+        populate_by_name=True,
+    )
+
+class Legality(CoreModel):
     is_legal: bool
     reason: str | None
 
-class State(TypedDict):
+class State(CoreModel):
     message: str
-    document_name: str | None
-    legality: Legality
-    document_structure: str | None
-    markdown_document: str | None
+    document_name: str | None = None
+    legality: Legality | None = None
+    document_structure: str | None = None
+    markdown_document: str | None = None
+    next: str | None = None

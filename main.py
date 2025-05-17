@@ -1,12 +1,12 @@
 from src.agent.graph import app
 from src.logger import logger
+from langchain_core.messages import HumanMessage
+from src.agent.graph import document_name_node
 
 
-sample_text = """
-Я хочу купить квартиру, помоги мне составить договор. 
-"""
+user_text = """Я хочу купить квартиру, помоги мне составить договор."""
 
-state_input = {"message": sample_text}
-result = app.invoke(state_input)
 
-logger.info(result)
+
+state_input = {"message": user_text}
+result = document_name_node(state_input)

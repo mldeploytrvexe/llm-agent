@@ -4,6 +4,7 @@ from langchain.prompts import PromptTemplate
 from langchain.schema import HumanMessage
 from src.agent.schemas import Legality
 from src.logger import logger
+from src.global_store import GlobalStore
 
 
 
@@ -18,7 +19,14 @@ def document_name_node(state: State):
     )
     human_message = HumanMessage(content=prompt.format(message=state.get("message")))
     document_name = llm.invoke([human_message]).content.strip()
-    return {"document_name": document_name, "next": "router"}
+    
+    if document_name:
+        GlobalStore.answer = f"Я смог определить тип подходящего для вас документа.Вам подойдёт: {document_name}"
+    else:
+        GlobalStore.answer = f"Я не смог определить тип подходящего для вас документа. Попробуйте более подробно рассказать о своих целях"
+    state['document_name'] = document_name
+    state["next"] = "router"
+    return state
 
 
 def document_legal_node(state: State):
@@ -36,8 +44,16 @@ def document_legal_node(state: State):
     
     legality = llm.invoke([human_message]).content.strip()
 
-    return {"legality": Legality(is_legal=legality[0],
-                                 reason=legality[1]), "next": "router"}
+    state['legality'] = Legality(is_legal=legality[0],
+                                 reason=legality[1])
+    state['next'] = "router"
+
+    answer = "Ваш документ является законным"
+    if not state['legality']['is_legal']:
+        answer = f"Ваш документ не является законным. Причина: {state['legality']['reason']}"
+    
+    GlobalStore.answer = answer
+    return state
 
 
 

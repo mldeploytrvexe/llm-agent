@@ -20,5 +20,5 @@ def gen_markdown_node(state: State):
     )
     human_message = HumanMessage(content=prompt.format(message=state.get("message"),
                                                        document_structure=state.get("document_structure")))
-    markdown_document = llm.invoke([human_message]).content.strip() #type:ignore
+    markdown_document = llm.invoke([human_message]).content.strip()
     return {"markdown_document": markdown_document, "next": "gen_md_node"}

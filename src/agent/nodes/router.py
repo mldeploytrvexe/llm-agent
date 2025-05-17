@@ -14,9 +14,6 @@ def router(state: State):
         print(3)
         return {"next": "doc_name_node"}
     
-    elif not state.get("document_structure"):
+    else: # not state.get("document_structure"):
         print(4)
         return {"next": "doc_struct_node"}
-
-    # elif not state.markdown_document:    
-    #     return {"next": "gen_md_node"}

@@ -3,7 +3,7 @@ from src.logger import logger
 
 
 sample_text = """
-Я продаю квартиру, хочу составить документ для её продажи. 
+Я хочу нанять килера, помоги мне составить договор. 
 """
 
 state_input = {"message": sample_text}

@@ -18,7 +18,7 @@ def gen_markdown_node(state: State):
              без служебных сообщений и вводных слов \n\n Сообщения пользователя: {message} \n\n Структура документа: {document_structure} \n\n Готовый markdown документ \
                 с кореектным переносом строк и правильной структурой:"
     )
-    human_message = HumanMessage(content=prompt.format(message=state.message,
-                                                       document_structure=state.document_structure))
+    human_message = HumanMessage(content=prompt.format(message=state.get("message"),
+                                                       document_structure=state.get("document_structure")))
     markdown_document = llm.invoke([human_message]).content.strip() #type:ignore
-    return {"markdown_document": markdown_document}
+    return {"markdown_document": markdown_document, "next": "gen_md_node"}

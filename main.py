@@ -9,4 +9,4 @@ sample_text = """
 state_input = {"message": sample_text}
 result = app.invoke(state_input)
 
-logger.info(result['is_legal'])
+logger.info(result)

@@ -1,0 +1,1 @@
+from src.agent.nodes.entry_document_processing import document_name_node, document_legal_node, document_structure_node

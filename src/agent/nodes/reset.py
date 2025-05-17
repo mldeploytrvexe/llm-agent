@@ -7,7 +7,7 @@ from langchain.schema import HumanMessage
 
 
 def reset_node(state: State):
-    state['message'] = None
+    state['message'] = None #type:ignore
     state['document_type'] = None
     state['is_legal'] = None
 

@@ -21,7 +21,7 @@ app.add_middleware(
 
 
 @app.post(
-    path="/chat",
+    path="/api/chat",
     response_model=ChatResponse
 )
 async def chat(

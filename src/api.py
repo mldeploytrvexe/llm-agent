@@ -61,7 +61,7 @@ async def chat_v2(
     logger.info(f"New message: {data.message}")
     try:
         response = run_SP(data.message)
-        # logger.info(GlobalStore.answer)
+        
         return response
     except Exception as e:
         logger.error(str(e))

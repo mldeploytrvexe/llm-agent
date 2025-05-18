@@ -4,8 +4,7 @@ from langchain_core.prompts import PromptTemplate
 from src.agent.llm import llm
 from src.api_schemas import ChatResponse
 from src.logger import logger
-
-chat_history = []
+from src.global_store import GlobalStore
 
 
 def run_SP(new_message: str) -> ChatResponse:
@@ -22,21 +21,29 @@ def run_SP(new_message: str) -> ChatResponse:
         input_variables=["history", "new_message"],
         template=prompt_text
     )
+
+    history_str = ""
+    for item in GlobalStore.chat_history:
+        history_str += f"{item.__str__()}"
     
     human_message = HumanMessage(
         content=prompt.format(
-            history=f"[{','.join(chat_history)}]",
+            history=history_str,
             new_message=new_message
         )
     )
-    chat_history.append({"role": "user", "text": new_message})
+    GlobalStore.chat_history.append({"role": "user", "text": new_message})
 
     response = llm.invoke([human_message]).content.strip()
+    print(response)
     json_str = response.replace("```", "").replace("json", "")
-    chat_history.append({"role": "ai", "text": json_str})
+    GlobalStore.chat_history.append({"role": "ai", "text": json_str})
 
     logger.info(json_str)
     chat_answer = ChatResponse.model_validate_json(json_str)
 
     return chat_answer
 
+
+def clear_history():
+    GlobalStore.chat_history = []

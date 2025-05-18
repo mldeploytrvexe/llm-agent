@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.SP.action import run_SP
+from src.SP.action import run_SP, clear_history
 from src.settings import settings
 from src.api_schemas import ChatRequest, ChatResponse
 from src.mock import mock_markdown
@@ -64,7 +64,15 @@ async def chat_v2(
         
         return response
     except Exception as e:
-        logger.error(str(e))
+        logger.error(str(e.__repr__()))
         return ChatResponse(
             message="У меня что-то сломалось по-моему",
         )
+
+
+@app.post(
+    path="/api/chat_v2/clear"
+)
+async def clear():
+    logger.info('Cleared history')
+    clear_history()

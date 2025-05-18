@@ -6,14 +6,17 @@ def router(state: State):
     print(state)
     if not state.get("document_name"):
         print(1)
-        return {"next": "doc_name_node"}
+        return {**state, "next": "doc_name_node"}
     elif not state.get("legality"):
         print(2)
-        return {"next": "doc_legal_node"}
+        return {**state, "next": "doc_legal_node"}
     elif state.get("legality").is_legal is False:
         print(3)
-        return {"next": "doc_name_node"}
+        return {**state, "next": "doc_name_node"}
     
-    else: # not state.get("document_structure"):
+    elif not state.get("document_structure"):
         print(4)
         return {"next": "doc_struct_node"}
+
+    print(5)
+    return {"next": "gen_md_node"}

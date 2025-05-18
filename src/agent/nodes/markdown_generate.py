@@ -3,6 +3,7 @@ from src.agent.llm import llm
 from langchain.prompts import PromptTemplate
 from langchain.schema import HumanMessage
 from src.logger import logger
+from src.global_store import GlobalStore
 
 
 def gen_markdown_node(state: State):
@@ -21,4 +22,7 @@ def gen_markdown_node(state: State):
     human_message = HumanMessage(content=prompt.format(message=state.get("message"),
                                                        document_structure=state.get("document_structure")))
     markdown_document = llm.invoke([human_message]).content.strip()
+    if markdown_document:
+        GlobalStore.answer = "Ваш документ готов в редакторе"
+        GlobalStore.mdwn = markdown_document
     return {"markdown_document": markdown_document, "next": "gen_md_node"}

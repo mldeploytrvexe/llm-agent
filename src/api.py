@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from src.SP.action import run_SP
 from src.settings import settings
 from src.api_schemas import ChatRequest, ChatResponse
 from src.mock import mock_markdown
@@ -25,6 +27,7 @@ app.add_middleware(
 
 state = {}
 
+
 @app.post(
     path="/api/chat",
     response_model=ChatResponse
@@ -40,6 +43,28 @@ async def chat(
         return ChatResponse(
             message=GlobalStore.answer,
             markdown_str=GlobalStore.mdwn
+        )
+    except Exception as e:
+        logger.error(str(e))
+        return ChatResponse(
+            message="У меня что-то сломалось по-моему",
+        )
+
+
+@app.post(
+    path="/api/chat_v2",
+    response_model=ChatResponse
+)
+async def chat_v2(
+    data: ChatRequest
+):
+    logger.info(f"New message: {data.message}")
+    try:
+        response = run_SP(data.message)
+        # logger.info(GlobalStore.answer)
+        return ChatResponse(
+            message=response,
+            markdown_str=None
         )
     except Exception as e:
         logger.error(str(e))

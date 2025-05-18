@@ -62,10 +62,7 @@ async def chat_v2(
     try:
         response = run_SP(data.message)
         # logger.info(GlobalStore.answer)
-        return ChatResponse(
-            message=response,
-            markdown_str=None
-        )
+        return response
     except Exception as e:
         logger.error(str(e))
         return ChatResponse(

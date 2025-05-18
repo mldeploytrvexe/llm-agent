@@ -3,7 +3,6 @@ from langchain_ollama import ChatOllama
 from src.settings import settings
 
 
-
 if settings.PROVIDER == "OLLAMA":
     llm = ChatOllama(
         model=settings.MODEL,

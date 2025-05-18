@@ -7,7 +7,6 @@ from src.logger import logger
 from src.global_store import GlobalStore
 
 
-
 def document_name_node(state: State):
     ''' Define type of document by user messages '''
     
@@ -49,16 +48,17 @@ def document_legal_node(state: State):
     state['next'] = "router"
 
     answer = "Ваш документ является законным"
-    if not state['legality']['is_legal']:
-        answer = f"Ваш документ не является законным. Причина: {state['legality']['reason']}"
+    if not state['legality'].is_legal:
+        answer = f"Ваш документ не является законным. Причина: {state['legality'].reason}"
     
     GlobalStore.answer = answer
     return state
 
 
-
 def document_structure_node(state: State):
     ''' Define structure of document by user messages '''
+    if state.get("document_structure") is not None:
+        return {}
     
     prompt = PromptTemplate(
         input_variables=["document_name"],
@@ -68,4 +68,7 @@ def document_structure_node(state: State):
     human_message = HumanMessage(content=prompt.format(document_name=state.get("document_name")))
     
     document_structure = llm.invoke([human_message]).content.strip() #type:ignore
+    # state["document_structure"] = document_structure
+    # state["next"] = "router"
+    print('STRUCTURE is READY')
     return {"document_structure": document_structure}
